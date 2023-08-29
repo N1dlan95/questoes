@@ -1,0 +1,107 @@
+#include <iostream>
+
+using namespace std;
+
+struct JogadorT{
+    string nome;
+    string posicao;
+    int numeroc;
+};
+struct JogadorR{
+    string nome;
+    string posicao;
+    int numeroc;
+};
+
+void preencher_T( JogadorT vetort[], int tamt){
+    cout<<"----------TITULADRES------------"<<endl;
+    for (int i=0; i<tamt; i++){
+    
+        cout<<"--------JOGADOR"<< i+1<<"-------"<<endl;
+        cout<<"Insira o nome: ";
+        cin>>vetort[i].nome;
+        cout<<"Insira a posição: ";
+        cin>>vetort[i].posicao;
+        cout<<"Insira o numero da camisa: ";
+        cin>>vetort[i].numeroc;
+    
+    }
+
+}
+void preencher_R( JogadorR vetorr[], int tamr){
+    cout<<"----------RESERVAS------------"<<endl;
+    for (int i=0; i<tamr; i++){
+        cout<<"--------JOGADOR"<< i+1<<"-------"<<endl;
+        cout<<"Insira o nome: ";
+        cin>>vetorr[i].nome;
+        cout<<"Insira a posição do jogador: ";
+        cin>>vetorr[i].posicao;
+        cout<<"Insira o numero da camisa: ";
+        cin>>vetorr[i].numeroc;
+    
+    }
+
+}
+void imprimir(JogadorR vetorr[], int tamr,JogadorT vetort[], int tamt){
+    for (int i=0; i<tamt; i++){
+        cout<<"-------Escalação dos Titulares-------"<<endl;
+        cout<<"Jogador"<<i+1 <<endl;
+        cout<<" Nome do jogador: "<< vetort[i].nome<<endl;
+        cout<<"Posição: "<< vetort[i].posicao<<endl;
+        cout<<"Numero da camisa: "<< vetort[i].numeroc<<endl;
+    }
+    for (int j=0; j<tamr; j++){
+        cout<<"-------Escalação dos Reservas-------"<<endl;
+        cout<<"Jogador"<<j+1 <<endl;
+        cout<<" Nome do jogador: "<< vetorr[j].nome<<endl;
+        cout<<"Posição: "<< vetorr[j].posicao<<endl;
+        cout<<"Numero da camisa: "<< vetorr[j].numeroc<<endl;
+    }
+
+    
+
+}
+void Substituir(JogadorR vetorr[], int tamr,JogadorT vetort[], int tamt){
+    int r,t;
+    
+    cout<<"Qual jogador titular deseja substituir?";
+    cin>> t;
+    JogadorT aux = vetort[t - 1];
+    cout<<"Qual jogador reserva deseja substituir?";
+    cin>> r;
+    vetort[t-1] = vetorr[r-1];
+    vetorr[r-1] = aux;
+
+}
+
+
+int main (){
+int tamt;
+string resposta;
+int tamr;
+cout<<"quantos jogadores titulares irão ser cadastrados?";
+cin>> tamt;
+cout<<"quantos jogadores reservas irão ser cadastrados?";
+cin>> tamr;
+JogadorT vetort[tamt];
+JogadorR vetorr[tamr];
+preencher_T(vetort,tamt);
+preencher_R(vetorr,tamr);
+imprimir(vetorr,tamr,vetort,tamt);
+cout<<"Deseja fazer alguma substituição? (S/N)";
+cin>>resposta;
+  if (resposta == "S"){
+    Substituir(vetorr,tamr,vetort,tamt);
+    imprimir(vetorr,tamr,vetort,tamt);
+
+  }
+cout<<"Escalação Finalizada";
+
+
+
+
+
+
+
+    return 0;
+}
