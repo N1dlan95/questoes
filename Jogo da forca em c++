@@ -1,0 +1,241 @@
+#include <iostream>
+using namespace std;
+#include <time.h>
+//  ______________________LISTA ENCADEADA_______________________
+//_________________________________________________________________
+struct letras{
+    char letra;
+    letras*prox;
+};
+letras* criar_lista(){
+    return NULL;
+}
+
+void append(letras*&L, char let){
+    letras* novo;
+    novo = new letras;
+    novo -> letra = let;
+    novo -> prox = NULL;
+    if(L==NULL){
+        L = novo;
+    }else{
+        letras* P = L;
+        while(P -> prox != NULL){
+            P = P -> prox;
+        }
+        P -> prox = novo;
+    }
+}
+
+void imprimir(letras*L){
+    if (L == NULL){
+        cout<<" "<<endl;
+    }else{
+        letras*P = L;
+        while(P != NULL){
+            cout<<P->letra<<" ";
+            P = P -> prox;
+        }
+    }
+}
+bool verificar_letra(letras*L, char letra_tentativa){
+    letras*P = L;
+        while(P != NULL){
+            P ->letra;
+            if( P->letra ==letra_tentativa){
+                return false;
+            }
+            P = P -> prox;
+        }return true;
+}
+//______________________________MATRIZ_____________________________
+//_____________________________________________________________________
+string** criar_matriz_tema(){
+    string ** mat;
+    mat = new string*[3];
+    for (int i=0; i < 3; i++){
+        mat[i] = new string[5];
+    }
+    return mat;
+}
+
+string** criar_matriz_forca(){
+    string ** mat;
+    mat = new string*[8];
+    for (int i=0; i < 8; i++){
+        mat[i] = new string[9];
+    }
+    return mat;
+}
+
+string** matriz_forca(string** matriz){
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 9; j++){
+            if(i==0){
+                matriz[i][j] = "_";
+            }else if(j==0 && i>0){
+                matriz[i][j] = "|";
+            }else if(i==1 && j==7){
+                matriz[i][j] = "|";
+            }else{
+                matriz[i][j] = " ";
+            }
+        }
+    }
+    return matriz;
+}
+
+string** matriz_erro(string** matriz, int erro){
+    if (erro == 1){
+        matriz[2][6] = "(";
+        matriz[2][7] = "_";
+        matriz[2][8] = ")";
+    }else if(erro == 2){
+        matriz[3][7] = "|";
+        matriz[4][7] = "|";
+    }else if(erro == 3){
+        matriz[3][6] = "/";
+    }else if(erro == 4){
+        matriz[3][8] = '\\';
+    }else if(erro == 5){
+        matriz[5][6] = "/";
+    }else if(erro == 6){
+        matriz[5][8] = '\\';
+    }
+    return matriz;
+}
+
+string** temas(string** matriz){
+    //obejetos
+    matriz[0][0] = "faca";
+    matriz[0][1] = "bola";
+    matriz[0][2] = "relogio";
+    matriz[0][3] = "carteira";
+    matriz[0][4] = "desfibrilador";
+    //animais
+    matriz[1][0] = "cachorro";
+    matriz[1][1] = "ema";
+    matriz[1][2] = "dromedario";
+    matriz[1][3] = "caranguejo";
+    matriz[1][4] = "hamster";
+    //comida
+    matriz[2][0] = "macarrao";
+    matriz[2][1] = "amora";
+    matriz[2][2] = "atum";
+    matriz[2][3] = "gengibre";
+    matriz[2][4] = "gorgonzola";
+    return matriz;
+}
+void imprimir_matriz(string** mat){
+    for(int i=0; i<8; i++){
+        for(int j=0; j<9; j++){
+            cout<<mat[i][j];
+        }
+        cout<<endl;
+    }
+
+}//_____________________FUNÇÕES DIVERSAS_______________________
+//________________________________________________________________
+
+int tamanho_palavra(string palavra){
+    int tam;
+    tam = palavra.length();
+    return tam;
+}
+string sortear_palavra(string** matriz){
+    string palavra;
+    int tema;
+    int aux = rand()%5;
+    cout<<"--- Escolha o tema! ---"<<endl<<"insira 1 para o tema objetos."<<endl<<"insira 2 para o tema animal."<<endl<<"insira 3 para o tema comida."<<endl;
+    cin>>tema;
+    palavra = matriz[tema-1][aux];
+    return palavra;
+}
+bool verificar(string palavra, int tam, char letra){ //quando for a mesma letra já colocada contabilizar erro tbm
+    for(int i = 0; i < tam; i++){
+        if(letra == palavra[i]){
+            return true;
+        }
+    }
+    return false;
+}
+//_________________________FUNÇÃO PRINCIPAL_____________________________
+//__________________________________________________________________________
+int main(){
+    srand( (unsigned)time(NULL) );
+    //_____________VARIÁVEIS________________
+    int tam;
+    char letra_tentativa;
+    string palavra_forca;
+    string resposta ="S";
+
+    letras* tentativas = criar_lista();
+    string** forca = criar_matriz_forca();
+    string** matriz_palavras = criar_matriz_tema();
+    matriz_palavras = temas(matriz_palavras);
+
+    while(resposta=="S"){
+        int erro = 0;
+        int acerto = 0;
+        forca = matriz_forca(forca);
+        palavra_forca = sortear_palavra(matriz_palavras);
+        tam = tamanho_palavra(palavra_forca);
+        string* traco = new string[tam];
+        imprimir_matriz(forca);
+        cout<<"   ";
+        for(int i=0; i<tam; i++){
+            traco[i] = "_";
+            cout<<traco[i]<<" ";
+        }
+        while(erro <6 && acerto<tam){
+            cout<<endl;
+            cout<<"Faca um chute: ";
+            cin>>letra_tentativa;
+            cout<<endl;
+            if(verificar(palavra_forca,tam,letra_tentativa)){
+                for(int i=0; i<tam; i++){
+                    if(letra_tentativa==palavra_forca[i]){
+                        traco[i] = letra_tentativa;
+                        if(verificar_letra(tentativas,letra_tentativa))
+                        acerto ++;
+                    }
+                    
+                }
+                
+                cout<<endl;
+            }else{ 
+                erro +=1; 
+                forca = matriz_erro(forca,erro);
+            }
+            imprimir_matriz(forca);
+            cout<<endl;
+            cout<<"   ";
+            append(tentativas,letra_tentativa);
+            for(int k=0; k<tam; k++){
+                cout<<traco[k]<<" ";
+            }
+            cout<<endl;
+            cout<<"Letras utilizadas: ";
+            imprimir(tentativas);
+            cout<<endl;
+        }
+        cout<<endl;
+        if(erro == 6){
+            cout<<"Voce perdeu! haha"<<endl;
+            cout<<"A palavra era: "<<palavra_forca<<endl;
+        }else{
+            cout<<"Voce ganhou, parabens!"<<endl;
+        }
+    cout<<"Deseja jogar novamente? (S/N)"<<endl;
+    cin>>resposta;
+
+     while (tentativas != NULL) {
+            letras* temp = tentativas;
+            tentativas = tentativas->prox;
+            delete temp;
+        }
+
+    }
+    cout<<"Jogo encerrado";
+        return 0;
+    }
